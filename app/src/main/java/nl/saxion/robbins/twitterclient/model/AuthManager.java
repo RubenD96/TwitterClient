@@ -14,7 +14,7 @@ public class AuthManager {
     private OAuth10aService service;
 
     private AuthManager() {
-        final OAuth10aService service = new ServiceBuilder()
+        service = new ServiceBuilder()
                 .apiKey("jlKDxCHl89Qjz1rJMEVGeDqP8")
                 .apiSecret("roMZVAfGnAov9m4vdsHrq7gzPuW8dW1knHMOlfdABkNOFbBkLw")
                 .build(TwitterApi.instance());
