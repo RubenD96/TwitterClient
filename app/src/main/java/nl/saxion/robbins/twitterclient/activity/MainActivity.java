@@ -1,24 +1,31 @@
 package nl.saxion.robbins.twitterclient.activity;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.ParseException;
 
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.Tweets;
-import nl.saxion.robbins.twitterclient.model.Users;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +38,16 @@ public class MainActivity extends AppCompatActivity {
         ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
+
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         try {
             String strJson = readAssetIntoString("json.json");
 
@@ -38,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject jsonRootObject = new JSONObject(strJson);
                 JSONArray jsonArray = jsonRootObject.getJSONArray("statuses");
 
-                for(int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length(); i++) {
                     try {
                         Tweets.getInstance().addTweet(jsonArray.getJSONObject(i));
                     } catch (ParseException e) {
@@ -57,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Reads an asset file and returns a string with the full contents.
      *
-     * @param filename  The filename of the file to read.
-     * @return          The contents of the file.
-     * @throws IOException  If file could not be found or not read.
+     * @param filename The filename of the file to read.
+     * @return The contents of the file.
+     * @throws IOException If file could not be found or not read.
      */
     private String readAssetIntoString(String filename) throws IOException {
         BufferedReader br = null;

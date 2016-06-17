@@ -7,19 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activity.MainActivity">
+    tools:context="nl.saxion.robbins.twitterclient.activity.LoginActivity">
 
-
-    <ListView
-        android:id="@+id/lv_tweets"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <Button
-        android:id="@+id/button"
+    <WebView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/lv_tweets"
+        android:id="@+id/wv_login"
         android:layout_alignParentTop="true"
-        android:text="New Button" />
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
