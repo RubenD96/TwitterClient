@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
 
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     if (url.startsWith("http://www.google.nl")) {
-                        new AccesTokenTask().execute();
+                        new AccessTokenTask(service).execute();
                     }
                     return false;
                 }
@@ -57,16 +58,26 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private class AccesTokenTask extends AsyncTask<String, Void, String> {
+    private class AccessTokenTask extends AsyncTask<String, Void, String> {
+        OAuth10aService service;
+
+        public AccessTokenTask(OAuth10aService service) {
+            this.service = service;
+        }
 
         @Override
         protected String doInBackground(String... params) {
-            return null;
+            final OAuth1AccessToken accessToken = service.getAccessToken(service.getRequestToken(), service.getRequestToken().getToken());
+            String strAccessToken = accessToken.getToken();
+
+            return strAccessToken;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            finish();
+            if (service.getRequestToken().getToken().equals(s)) {
+                finish();
+            }
         }
     }
 }
