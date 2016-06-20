@@ -15,8 +15,9 @@ public class AuthManager {
 
     private AuthManager() {
         service = new ServiceBuilder()
-                .apiKey("jlKDxCHl89Qjz1rJMEVGeDqP8")
-                .apiSecret("roMZVAfGnAov9m4vdsHrq7gzPuW8dW1knHMOlfdABkNOFbBkLw")
+                .apiKey("QHBkxB4E3VoqAEuuIYGkrOnrP")
+                .apiSecret("WX5p3Kfu4ILF0bqj6OxhY7Uw3eSicaln6g168UGahj5KFxcU2D")
+                .callback("http://www.google.nl")
                 .build(TwitterApi.instance());
     }
 
