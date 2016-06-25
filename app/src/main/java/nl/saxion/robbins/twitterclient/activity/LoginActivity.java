@@ -1,5 +1,6 @@
 package nl.saxion.robbins.twitterclient.activity;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,9 +8,9 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.github.scribejava.core.builder.api.DefaultApi10a;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.oauth.OAuth10aService;
 
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.AuthManager;
@@ -25,61 +26,53 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         wvLogin = (WebView) findViewById(R.id.wv_login);
-        RequestTokenTask requestTokenTask = new RequestTokenTask(AuthManager.getInstance().getService());
+        RequestTokenTask requestTokenTask = new RequestTokenTask();
         requestTokenTask.execute();
+
+        wvLogin.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("http://www.google.nl")) {
+                    Uri uri = Uri.parse(url);
+                    String verifier = uri.getQueryParameter("oauth_verifier");
+
+                    new AccessTokenTask(verifier).execute();
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private class RequestTokenTask extends AsyncTask<String, Void, String> {
 
-        OAuth10aService service;
-
-        public RequestTokenTask(OAuth10aService service) {
-            this.service = service;
-        }
-
         @Override
         protected String doInBackground(String... params) {
-            requestToken = service.getRequestToken();
-            String authUrl = service.getAuthorizationUrl(requestToken);
-            return authUrl;
+            requestToken = AuthManager.getInstance().getRequestToken();
+            String url = AuthManager.getInstance().getService().getAuthorizationUrl(requestToken) + "?oauth_token=" + requestToken.getToken();
+            return url;
         }
 
         @Override
-        protected void onPostExecute(String authUrl) {
-            wvLogin.loadUrl(authUrl);
-            wvLogin.setWebViewClient(new WebViewClient() {
-
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if (url.startsWith("http://www.google.nl")) {
-                        int equalSign = url.lastIndexOf("=");
-                        Log.i("" + equalSign, "shouldOverrideUrlLoading: hoi");
-                        String verifier = url.substring(equalSign + 1);
-                        Log.i("hoi", url);
-                        Log.d("doei", verifier);
-
-                        new AccessTokenTask(service, verifier).execute();
-                        return true;
-                    }
-                    return false;
-                }
-            });
+        protected void onPostExecute(String url) {
+            wvLogin.loadUrl(url);
         }
     }
 
     private class AccessTokenTask extends AsyncTask<String, Void, String> {
-        OAuth10aService service;
         String verifier;
 
-        public AccessTokenTask(OAuth10aService service, String verifier) {
-            this.service = service;
+        public AccessTokenTask(String verifier) {
             this.verifier = verifier;
         }
 
         @Override
         protected String doInBackground(String... params) {
-            OAuth1AccessToken accessToken = service.getAccessToken(requestToken, verifier);
+            OAuth1AccessToken accessToken = AuthManager.getInstance().getAccessToken(verifier);
             String strAccessToken = accessToken.getToken();
+            AuthManager.getInstance().setAccessToken(accessToken);
 
             return strAccessToken;
         }
@@ -91,4 +84,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    public static class TwitterAPI extends DefaultApi10a {
+        private static TwitterAPI instance;
+
+        public static TwitterAPI getInstance(){
+            if(instance == null){
+                instance = new TwitterAPI();
+            }
+            return instance;
+        }
+
+        @Override
+        public String getRequestTokenEndpoint() {
+            return "https://api.twitter.com/oauth/request_token";
+        }
+
+        @Override
+        public String getAccessTokenEndpoint() {
+            return "https://api.twitter.com/oauth/access_token";
+        }
+
+        @Override
+        public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
+            return "https://api.twitter.com/oauth/authorize";
+        }
+    }
+
 }
