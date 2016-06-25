@@ -52,6 +52,10 @@ public class AuthManager {
         return service.getAccessToken(this.requestToken,verifier);
     }
 
+    public OAuth1AccessToken getAccessToken() {
+        return accessToken;
+    }
+
     public void setAccessToken(OAuth1AccessToken accessToken) {
         this.accessToken = accessToken;
     }

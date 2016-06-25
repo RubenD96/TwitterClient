@@ -30,11 +30,11 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/actv_search" />
 
-    <!--<Button
+    <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/lv_tweets"
         android:layout_alignParentTop="true"
-        android:text="New Button" />-->
+        android:text="New Button"
+        android:layout_toEndOf="@id/btn_search" />
 </RelativeLayout>

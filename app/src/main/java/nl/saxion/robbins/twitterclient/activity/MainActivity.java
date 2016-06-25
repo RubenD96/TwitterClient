@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -17,23 +17,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.AuthManager;
+import nl.saxion.robbins.twitterclient.model.RequestHandler;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.Tweets;
 
 public class MainActivity extends AppCompatActivity {
+
     private OAuthService authService = AuthManager.getInstance().getService();
+    private AutoCompleteTextView actvSearch;
+    private Button btnSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +52,28 @@ public class MainActivity extends AppCompatActivity {
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
 
-        /*Button button = (Button) findViewById(R.id.button);
+        actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
+        btnSearch = (Button) findViewById(R.id.btn_search);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (actvSearch.getText() != null && actvSearch.length() > 2) {
+                    startSearch(actvSearch.getText().toString());
+                }
+            }
+        });
+
+        Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RequestHandler downloader;
+                downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
+                downloader.execute();
             }
-        });*/
+        });
 
         try {
             String strJson = readAssetIntoString("json.json");
@@ -77,6 +94,17 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startSearch(String searchClause) {
+        RequestHandler downloader;
+        try {
+            String searchUrl = "https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(searchClause, "UTF-8");
+            downloader = new RequestHandler(searchUrl, RequestHandler.GET_REQUEST);
+            downloader.execute();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
