@@ -21,6 +21,7 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
     private ViewHolder holder;
     private Tweet tweet;
     private AuthManager authManager;
+    private TwitterModel model;
 
     public TweetAdapter(Context context, int resource, ArrayList<Tweet> objects) {
         super(context, resource, objects);
@@ -41,6 +42,9 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
             holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tvScreenName = (TextView) convertView.findViewById(R.id.tv_screen_name);
             holder.tvText = (TextView) convertView.findViewById(R.id.tv_text);
+
+            model = TwitterApplication.getModel();
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -52,9 +56,12 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
         holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getContext(), ProfileActivity.class);
-                String screenName = tweet.getUser().getScreenName();
-                intent.putExtra("screen_name", screenName);
+                model.setUser(tweet.getUser());
+
+                // String screenName = tweet.getUser().getScreenName();
+                // intent.putExtra("screen_name", screenName);
                 getContext().startActivity(intent);
             }
         });

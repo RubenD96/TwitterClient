@@ -1,15 +1,9 @@
 package nl.saxion.robbins.twitterclient.model;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  *
@@ -20,6 +14,8 @@ public class User {
     private String screenName;
     private String description;
     private String profileImageUrl;
+    private int followersCount;
+    private int friendCount;
 
     /**
      * Constructor for the User class. Creates a new User based on a JSON object
@@ -32,6 +28,8 @@ public class User {
             this.screenName = jsonObject.getString("screen_name");
             this.description = jsonObject.getString("description");
             this.profileImageUrl = jsonObject.getString("profile_image_url");
+            this.followersCount = jsonObject.getInt("followers_count");
+            this.friendCount = jsonObject.getInt("friends_count");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -75,5 +73,21 @@ public class User {
      */
     public String getProfileImageUrl() {
         return profileImageUrl;
+    }
+
+    /**
+     * Get the User followers
+     * @return number of followers
+     */
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    /**
+     * Get the User friends
+     * @return number of friends
+     */
+    public int getFriendsCount() {
+        return friendCount;
     }
 }

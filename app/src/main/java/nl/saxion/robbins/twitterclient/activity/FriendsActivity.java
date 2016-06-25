@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import nl.saxion.robbins.twitterclient.R;
 
-public class FollowingActivity extends AppCompatActivity {
+public class FriendsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -43,7 +43,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_following_count"
+        android:id="@+id/tv_friends_count"
         android:textStyle="bold"
         android:layout_below="@+id/tv_description"
         android:layout_alignParentStart="true" />
@@ -52,9 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Following"
-        android:id="@+id/tv_following"
+        android:id="@+id/tv_friends"
         android:layout_below="@+id/tv_description"
-        android:layout_toEndOf="@+id/tv_following_count" />
+        android:layout_toEndOf="@+id/tv_friends_count" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
         android:id="@+id/tv_followers_count"
         android:textStyle="bold"
         android:layout_below="@+id/tv_description"
-        android:layout_toEndOf="@id/tv_following" />
+        android:layout_toEndOf="@id/tv_friends" />
 
     <TextView
         android:layout_width="wrap_content"

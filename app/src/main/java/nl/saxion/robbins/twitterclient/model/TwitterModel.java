@@ -25,6 +25,7 @@ public class TwitterModel extends Observable implements Observer {
     private ArrayList<Tweet> tweets;
     private ArrayList<User> users;
     //private Profile profile;
+    private User user;
     private HashSet<String> friendIds;
     private ArrayList<String> friendNames;
     private ArrayList<String> followerNames;
@@ -69,6 +70,14 @@ public class TwitterModel extends Observable implements Observer {
     /** Get the list with friend names */
     public ArrayList<String> getFriendNames() {
         return friendNames;
+    }
+
+    /**
+     * Get the user
+     * @return the user
+     */
+    public User getUser() {
+        return user;
     }
 
     /**********************************************************************************/
@@ -135,6 +144,20 @@ public class TwitterModel extends Observable implements Observer {
             }*/
             refresh();
         }
+    }
+
+    /**
+     * Set the user
+     */
+    public void setUser(User user) {
+        this.user = user;
+        /*JsonParser parser = new JsonParser(user);
+        try {
+            this.user = new User(parser.getParentObject());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
     }
 
     /** Set the list with user id's to match the JSON result String */
