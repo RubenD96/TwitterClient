@@ -36,7 +36,7 @@ public class SearchActivity extends AppCompatActivity {
         model = ((TwitterApplication) getApplication()).getModel();
         model.clearTweets();
         lvSearch = (ListView) findViewById(R.id.lv_search);
-        TweetAdapter adapter = new TweetAdapter(this, R.id.lv_tweets, model.getTweets());
+        TweetAdapter adapter = new TweetAdapter(this, model.getTweets(), model);
         lvSearch.setAdapter(adapter);
         model.addObserver(adapter);
 

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
         downloader.execute();
 
-        tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, model.getTweets());
+        tweetAdapter = new TweetAdapter(this,model.getTweets(), model);
         lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
 

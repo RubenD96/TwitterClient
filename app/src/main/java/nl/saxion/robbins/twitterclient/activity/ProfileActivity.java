@@ -26,7 +26,7 @@ public class ProfileActivity extends AppCompatActivity {
         model = ((TwitterApplication) getApplication()).getModel();
         model.clearTweets();
 
-        TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, model.getTweets());
+        TweetAdapter tweetAdapter = new TweetAdapter(this, model.getTweets(), model);
         ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
 

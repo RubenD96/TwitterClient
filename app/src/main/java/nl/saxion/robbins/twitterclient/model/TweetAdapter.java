@@ -22,9 +22,9 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
     private Tweet tweet;
     private AuthManager authManager;
     private TwitterModel model;
-
-    public TweetAdapter(Context context, int resource, ArrayList<Tweet> objects) {
-        super(context, resource, objects);
+    public TweetAdapter(Context context, ArrayList<Tweet> objects, TwitterModel model) {
+        super(context, 0, objects);
+        this.model = model;
     }
 
     @Override
@@ -42,8 +42,6 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
             holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tvScreenName = (TextView) convertView.findViewById(R.id.tv_screen_name);
             holder.tvText = (TextView) convertView.findViewById(R.id.tv_text);
-
-            model = TwitterApplication.getModel();
 
             convertView.setTag(holder);
         } else {
