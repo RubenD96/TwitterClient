@@ -25,7 +25,6 @@ import nl.saxion.robbins.twitterclient.model.TwitterModel;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnSearch;
-    private TweetAdapter tweetAdapter;
     private ListView lvTweets;
     private TwitterModel model;
 
@@ -35,15 +34,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         model = ((TwitterApplication) getApplication()).getModel();
+        TweetAdapter adapter = new TweetAdapter(this,model.getTweets(), model);
+        lvTweets = (ListView) findViewById(R.id.lv_tweets);
+        lvTweets.setAdapter(adapter);
+        model.addObserver(adapter);
 
         RequestHandler downloader;
-        // downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
         downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
         downloader.execute();
-
-        tweetAdapter = new TweetAdapter(this,model.getTweets(), model);
-        lvTweets = (ListView) findViewById(R.id.lv_tweets);
-        lvTweets.setAdapter(tweetAdapter);
 
         btnSearch = (Button) findViewById(R.id.btn_search);
 

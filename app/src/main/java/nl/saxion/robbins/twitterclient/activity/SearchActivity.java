@@ -63,14 +63,18 @@ public class SearchActivity extends AppCompatActivity {
         startSearch(hashtag);
     }
 
-    /** On back pressed (go back to home screen), clear the tweets */
+    /**
+     * On back pressed (go back to home screen), clear the tweets
+     */
     @Override
     public void onBackPressed() {
         model.clearTweets();
         super.onBackPressed();
     }
 
-    /** Start a search for the given search clause */
+    /**
+     * Start a search for the given search clause
+     */
     private void startSearch(String searchClause) {
         RequestHandler downloader;
         try {
