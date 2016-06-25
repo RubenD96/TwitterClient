@@ -1,6 +1,7 @@
 package nl.saxion.robbins.twitterclient.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,7 +24,6 @@ import nl.saxion.robbins.twitterclient.model.TwitterModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView actvSearch;
     private Button btnSearch;
     private TweetAdapter tweetAdapter;
     private ListView lvTweets;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        model = TwitterApplication.getModel();
+        model = ((TwitterApplication) getApplication()).getModel();
 
         RequestHandler downloader;
         // downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
@@ -45,31 +45,14 @@ public class MainActivity extends AppCompatActivity {
         lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
 
-        actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
-
         btnSearch = (Button) findViewById(R.id.btn_search);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (actvSearch.getText() != null && actvSearch.length() > 2) {
-                    model.clearTweets();
-                    startSearch(actvSearch.getText().toString());
-
-                    tweetAdapter.notifyDataSetChanged();
-
-                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-            }
-        });
-
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+                Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(searchIntent);
             }
         });
 

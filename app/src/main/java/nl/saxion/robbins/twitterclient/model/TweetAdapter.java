@@ -2,8 +2,6 @@ package nl.saxion.robbins.twitterclient.model;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.activity.ProfileActivity;
 
-public class TweetAdapter extends ArrayAdapter<Tweet> {
+public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
 
     private ViewHolder holder;
     private Tweet tweet;
@@ -34,16 +26,14 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         super(context, resource, objects);
     }
 
-    static class ViewHolder {
-        ImageView ivProfileImage;
-        TextView tvName;
-        TextView tvScreenName;
-        TextView tvText;
+    @Override
+    public void update(Observable observable, Object data) {
+        notifyDataSetChanged();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.tweet, parent, false);
 
             holder = new ViewHolder();
@@ -74,6 +64,13 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         holder.tvText.setText(tweet.getText());
 
         return convertView;
+    }
+
+    static class ViewHolder {
+        ImageView ivProfileImage;
+        TextView tvName;
+        TextView tvScreenName;
+        TextView tvText;
     }
 
     /*public static Bitmap getBitmapFromUrl(String src) {
