@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        model = ((TwitterApplication) getApplication()).getModel();
+        model = TwitterApplication.getModel();
 
         TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, model.getTweets());
         ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
