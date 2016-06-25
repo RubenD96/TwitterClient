@@ -1,7 +1,6 @@
 package nl.saxion.robbins.twitterclient.activity;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,10 +11,6 @@ import android.widget.ListView;
 
 import com.github.scribejava.core.oauth.OAuthService;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
