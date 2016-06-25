@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private OAuthService authService = AuthManager.getInstance().getService();
     private AutoCompleteTextView actvSearch;
     private Button btnSearch;
+    private TweetAdapter tweetAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,10 @@ public class MainActivity extends AppCompatActivity {
         downloader = new RequestHandler("https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
         downloader.execute();
 
-        TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
-        ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
+        tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
+        final ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
-        tweetAdapter.notifyDataSetChanged();
 
         actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
 
@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (actvSearch.getText() != null && actvSearch.length() > 2) {
                     startSearch(actvSearch.getText().toString());
+
+                    tweetAdapter.notifyDataSetChanged();
                 }
             }
         });
