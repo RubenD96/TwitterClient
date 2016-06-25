@@ -45,10 +45,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
-        OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/account/verify_credentials.json", authService);
-
-        TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
-        ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
+        final TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
+        final ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
 
@@ -70,32 +68,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RequestHandler downloader;
-                downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
+                // downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
+                downloader = new RequestHandler("https://api.twitter.com/1.1/statuses/user_timeline.json", RequestHandler.GET_REQUEST);
                 downloader.execute();
+                tweetAdapter.notifyDataSetChanged();
             }
         });
 
-        try {
-            String strJson = readAssetIntoString("json.json");
 
-            try {
-                JSONObject jsonRootObject = new JSONObject(strJson);
-                JSONArray jsonArray = jsonRootObject.getJSONArray("statuses");
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        Tweets.getInstance().addTweet(jsonArray.getJSONObject(i));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void startSearch(String searchClause) {
