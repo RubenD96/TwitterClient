@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.oauth.OAuthService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,29 +28,35 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 
 import nl.saxion.robbins.twitterclient.R;
+import nl.saxion.robbins.twitterclient.model.AuthManager;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.Tweets;
 
 public class MainActivity extends AppCompatActivity {
+    private OAuthService authService = AuthManager.getInstance().getService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+        OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/account/verify_credentials.json", authService);
+
         TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
         ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
 
-        Button button = (Button) findViewById(R.id.button);
+        /*Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), LoginActivity.class);
-                startActivity(intent);
+
             }
-        });
+        });*/
 
         try {
             String strJson = readAssetIntoString("json.json");
