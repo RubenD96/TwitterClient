@@ -28,6 +28,7 @@ import java.text.ParseException;
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.AuthManager;
 import nl.saxion.robbins.twitterclient.model.RequestHandler;
+import nl.saxion.robbins.twitterclient.model.Tweet;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.Tweets;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
+        tweetAdapter.notifyDataSetChanged();
 
         actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
 

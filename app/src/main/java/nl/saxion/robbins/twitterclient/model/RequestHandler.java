@@ -53,23 +53,46 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String strJson) {
         if (request_type == GET_REQUEST) {
-            try {
+            if(url.startsWith("https://api.twitter.com/1.1/statuses/home_timeline.json")) {
                 try {
-                    JSONArray jsonArray = new JSONArray(strJson);
+                    try {
+                        JSONArray jsonArray = new JSONArray(strJson);
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        try {
-                            Tweets.getInstance().addTweet(jsonArray.getJSONObject(i));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+                                Tweets.getInstance().addTweet(jsonArray.getJSONObject(i));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                } catch (JSONException e) {
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else if(url.startsWith("https://api.twitter.com/1.1/search/tweets.json")) {
+                try {
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(strJson);
+                        JSONArray jsonArray = jsonObject.getJSONArray("statuses");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+                                Tweets.getInstance().addTweet(jsonArray.getJSONObject(i));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         } else if (request_type == POST_REQUEST) {
