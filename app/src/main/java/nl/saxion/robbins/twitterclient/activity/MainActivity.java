@@ -18,27 +18,30 @@ import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.AuthManager;
 import nl.saxion.robbins.twitterclient.model.RequestHandler;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
-import nl.saxion.robbins.twitterclient.model.Tweets;
+import nl.saxion.robbins.twitterclient.model.TwitterApplication;
+import nl.saxion.robbins.twitterclient.model.TwitterModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private OAuthService authService = AuthManager.getInstance().getService();
     private AutoCompleteTextView actvSearch;
     private Button btnSearch;
     private TweetAdapter tweetAdapter;
     private ListView lvTweets;
+    private TwitterModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        model = ((TwitterApplication) getApplication()).getModel();
+
         RequestHandler downloader;
         // downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
-        downloader = new RequestHandler("https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
+        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
         downloader.execute();
 
-        tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
+        tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, model.getTweets());
         lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
 
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (actvSearch.getText() != null && actvSearch.length() > 2) {
-                    Tweets.getInstance().clearTweets();
+                    model.clearTweets();
                     startSearch(actvSearch.getText().toString());
 
                     tweetAdapter.notifyDataSetChanged();
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         RequestHandler downloader;
         try {
             String searchUrl = "https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(searchClause, "UTF-8");
-            downloader = new RequestHandler(searchUrl, RequestHandler.GET_REQUEST);
+            downloader = new RequestHandler(model, searchUrl, RequestHandler.GET_REQUEST);
             downloader.execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

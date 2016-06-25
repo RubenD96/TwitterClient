@@ -24,11 +24,13 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
     public static final int POST_REQUEST = 2;
 
     private AuthManager authManager;
+    private TwitterModel model;
     private String url;
     private int request_type;
 
-    public RequestHandler(String url, int request_type) {
+    public RequestHandler(TwitterModel model, String url, int request_type) {
         authManager = AuthManager.getInstance();
+        this.model = model;
         this.url = url;
         this.request_type = request_type;
     }
@@ -54,7 +56,7 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String strJson) {
         if (request_type == GET_REQUEST) {
             if(url.startsWith("https://api.twitter.com/1.1/statuses/home_timeline.json")) {
-                try {
+                /*try {
                     try {
                         JSONArray jsonArray = new JSONArray(strJson);
 
@@ -71,9 +73,12 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
+                model.setTimeline(strJson);
             } else if(url.startsWith("https://api.twitter.com/1.1/search/tweets.json")) {
-                try {
+                model.setTweetItems(strJson);
+            }
+                /*try {
 
                     try {
                         JSONObject jsonObject = new JSONObject(strJson);
@@ -92,8 +97,7 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-            }
+                }*/
 
         } else if (request_type == POST_REQUEST) {
 
