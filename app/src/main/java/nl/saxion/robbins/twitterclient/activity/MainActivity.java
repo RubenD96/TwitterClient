@@ -1,21 +1,16 @@
 package nl.saxion.robbins.twitterclient.activity;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuthService;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,12 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.ParseException;
 
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.AuthManager;
 import nl.saxion.robbins.twitterclient.model.RequestHandler;
-import nl.saxion.robbins.twitterclient.model.Tweet;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.Tweets;
 
@@ -38,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView actvSearch;
     private Button btnSearch;
     private TweetAdapter tweetAdapter;
+    private ListView lvTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
         downloader.execute();
 
         tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
-        final ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
+        lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
-        Tweets.getInstance().clearTweets();
 
         actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
 
@@ -63,9 +56,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (actvSearch.getText() != null && actvSearch.length() > 2) {
+                    Tweets.getInstance().clearTweets();
                     startSearch(actvSearch.getText().toString());
 
                     tweetAdapter.notifyDataSetChanged();
+
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
             }
         });
@@ -78,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void startSearch(String searchClause) {
@@ -90,38 +86,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Reads an asset file and returns a string with the full contents.
-     *
-     * @param filename The filename of the file to read.
-     * @return The contents of the file.
-     * @throws IOException If file could not be found or not read.
-     */
-    private String readAssetIntoString(String filename) throws IOException {
-        BufferedReader br = null;
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try {
-            InputStream is = getAssets().open(filename, AssetManager.ACCESS_BUFFER);
-            br = new BufferedReader(new InputStreamReader(is));
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return sb.toString();
     }
 }

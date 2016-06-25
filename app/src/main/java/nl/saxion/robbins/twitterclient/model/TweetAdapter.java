@@ -19,29 +19,42 @@ import java.util.ArrayList;
 import nl.saxion.robbins.twitterclient.R;
 
 public class TweetAdapter extends ArrayAdapter<Tweet> {
+
+    private ViewHolder holder;
+    private Tweet tweet;
+
     public TweetAdapter(Context context, int resource, ArrayList<Tweet> objects) {
         super(context, resource, objects);
+    }
+
+    static class ViewHolder {
+        ImageView ivProfileImage;
+        TextView tvName;
+        TextView tvScreenName;
+        TextView tvText;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.tweet, parent, false);
+
+            holder = new ViewHolder();
+            holder.ivProfileImage = (ImageView) convertView.findViewById(R.id.iv_profile_image);
+            holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.tvScreenName = (TextView) convertView.findViewById(R.id.tv_screen_name);
+            holder.tvText = (TextView) convertView.findViewById(R.id.tv_text);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        Tweet tweet = Tweets.getInstance().getTweets().get(position);
+        tweet = getItem(position);
 
-        ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.iv_profile_image);
-        new ImageLoadTask(tweet.getUser().getProfileImageUrl(), ivProfileImage).execute();
-
-        TextView tvName = (TextView) convertView.findViewById(R.id.tv_name);
-        tvName.setText(tweet.getUser().getName());
-
-        TextView tvScreenName = (TextView) convertView.findViewById(R.id.tv_screen_name);
-        tvScreenName.setText(tweet.getUser().getScreenName());
-
-        TextView tvText = (TextView) convertView.findViewById(R.id.tv_text);
-        tvText.setText(tweet.getText());
+        new ImageLoadTask(tweet.getUser().getProfileImageUrl(), holder.ivProfileImage).execute();
+        holder.tvName.setText(tweet.getUser().getName());
+        holder.tvScreenName.setText(tweet.getUser().getScreenName());
+        holder.tvText.setText(tweet.getText());
 
         return convertView;
     }
