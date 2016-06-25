@@ -42,15 +42,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        RequestHandler downloader;
+        // downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
+        downloader = new RequestHandler("https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
+        downloader.execute();
 
-        final TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
-        final ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
+        TweetAdapter tweetAdapter = new TweetAdapter(this, R.id.lv_tweets, Tweets.getInstance().getTweets());
+        ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
         Tweets.getInstance().clearTweets();
 
         actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
+
         btnSearch = (Button) findViewById(R.id.btn_search);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -67,11 +70,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestHandler downloader;
-                // downloader = new RequestHandler("https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.GET_REQUEST);
-                downloader = new RequestHandler("https://api.twitter.com/1.1/statuses/user_timeline.json", RequestHandler.GET_REQUEST);
-                downloader.execute();
-                tweetAdapter.notifyDataSetChanged();
+
             }
         });
 

@@ -1,5 +1,6 @@
 package nl.saxion.robbins.twitterclient.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
                     String verifier = uri.getQueryParameter("oauth_verifier");
 
                     new AccessTokenTask(verifier).execute();
-                    finish();
                     return true;
                 }
                 return false;
@@ -79,9 +79,10 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if (requestToken.getToken().equals(s)) {
-                finish();
-            }
+            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(intent);
+
+            finish();
         }
     }
 
