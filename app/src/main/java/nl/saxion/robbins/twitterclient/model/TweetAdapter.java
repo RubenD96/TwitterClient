@@ -20,7 +20,6 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
 
     private ViewHolder holder;
     private Tweet tweet;
-    private AuthManager authManager;
     private TwitterModel model;
 
     public TweetAdapter(Context context, ArrayList<Tweet> objects, TwitterModel model) {
@@ -52,18 +51,10 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
         tweet = getItem(position);
 
         new ImageLoadTask(tweet.getUser().getProfileImageUrl(), holder.ivProfileImage).execute();
-        holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.setUser(tweet.getUser());
-
-                Intent intent = new Intent(getContext(), ProfileActivity.class);
-                getContext().startActivity(intent);
-            }
-        });
+        holder.ivProfileImage.setOnClickListener(new TweetOnClickListener(position));
 
         holder.tvName.setText(tweet.getUser().getName());
-        holder.tvScreenName.setText(tweet.getUser().getScreenName());
+        holder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
         holder.tvText.setText(tweet.getText());
 
         return convertView;
@@ -74,6 +65,24 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
         TextView tvName;
         TextView tvScreenName;
         TextView tvText;
+    }
+
+    private class TweetOnClickListener implements View.OnClickListener {
+        private int position;
+
+        public TweetOnClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            model.setUser(model.getTweets().get(position).getUser());
+            // model.setUser(tweet.getUser());
+            System.out.println(tweet.getText());
+
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            getContext().startActivity(intent);
+        }
     }
 
     /*public static Bitmap getBitmapFromUrl(String src) {

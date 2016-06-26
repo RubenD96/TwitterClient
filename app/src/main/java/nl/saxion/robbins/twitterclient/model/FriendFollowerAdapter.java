@@ -17,9 +17,10 @@ import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.activity.ProfileActivity;
 
 public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observer {
+
     private ViewHolder holder;
-    private TwitterModel model;
     private User user;
+    private TwitterModel model;
 
     public FriendFollowerAdapter(Context context, List<User> objects, TwitterModel model) {
         super(context, 0, objects);
@@ -50,15 +51,7 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
         user = getItem(position);
 
         new ImageLoadTask(user.getProfileImageUrl(), holder.ivProfileImage).execute();
-        holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.setUser(user);
-
-                Intent intent = new Intent(getContext(), ProfileActivity.class);
-                getContext().startActivity(intent);
-            }
-        });
+        holder.ivProfileImage.setOnClickListener(new FriendFollowerOnClickListener(position));
 
         holder.tvName.setText(user.getName());
         holder.tvScreenName.setText(user.getScreenName());
@@ -72,5 +65,21 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
         TextView tvName;
         TextView tvScreenName;
         TextView tvDescription;
+    }
+
+    private class FriendFollowerOnClickListener implements View.OnClickListener {
+        private int position;
+
+        public FriendFollowerOnClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            model.setUser(model.getUsers().get(position));
+
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            getContext().startActivity(intent);
+        }
     }
 }

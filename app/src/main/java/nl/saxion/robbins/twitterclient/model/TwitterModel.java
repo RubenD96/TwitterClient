@@ -152,14 +152,7 @@ public class TwitterModel extends Observable implements Observer {
                     }
                 }
             }
-            /*JsonParser profileParser;
-            try {
-                profileParser = new JsonParser((JSONObject) parser.getParentArray().get(0));
-                profile = new Profile(profileParser.getObject("user"), this);
-                profile.addObserver(this);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
+
             refresh();
         }
     }
@@ -173,13 +166,6 @@ public class TwitterModel extends Observable implements Observer {
      */
     public void setUser(User user) {
         this.user = user;
-        /*JsonParser parser = new JsonParser(user);
-        try {
-            this.user = new User(parser.getParentObject());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
     }
 
     /**
@@ -187,24 +173,33 @@ public class TwitterModel extends Observable implements Observer {
      * @param result JSON string with users
      */
     public void setUsers(String result) {
-        System.out.println("Start setUsers " + result);
+        System.out.println("Start setUsers");
 
         if (result != null && !result.isEmpty()) {
             users.clear();
-            System.out.println("Users cleared");
 
             JsonParser parser = new JsonParser(result);
-            System.out.println("New parser");
+            JSONArray userArray = parser.getArray("users");
 
-            if (parser.getParentArray() != null) {
-                System.out.println("Entered if...");
-
-                for (int i = 0; i < parser.getParentArray().length(); i++) {
-                    System.out.println("Entered for...");
-                    try {
-                        users.add(new User(parser.getObject(i)));
+            if(userArray == null) {
+                System.out.println("User array null");
+                if (parser.getParentArray() != null) {
+                    for (int i = 0; i < parser.getParentArray().length(); i++) {
+                        try {
+                            users.add(new User(parser.getObject(i)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    catch (IOException e) {
+                }
+            } else {
+                System.out.println("User array not null");
+                for (int i = 0; i < userArray.length(); i++) {
+                    try {
+                        users.add(new User(userArray.getJSONObject(i)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
@@ -237,8 +232,8 @@ public class TwitterModel extends Observable implements Observer {
 
         RequestHandler downloader;
         String ids = null;
-        boolean startRequest = false;
         System.out.println(userIDs.size());
+        int size = userIDs.size();
 
         while(!userIDs.isEmpty()) {
             if(ids == null) {

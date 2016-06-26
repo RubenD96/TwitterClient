@@ -26,9 +26,7 @@ public class FriendsActivity extends AppCompatActivity {
         model.addObserver(adapter);
 
         RequestHandler downloader;
-        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=" + model.getUser().getScreenName() + "&count=5000", RequestHandler.GET_REQUEST);
+        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/friends/list.json?screen_name=" + model.getUser().getScreenName(), RequestHandler.GET_REQUEST);
         downloader.execute();
-
-
     }
 }
