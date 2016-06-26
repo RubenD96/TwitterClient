@@ -39,9 +39,7 @@ public class MainActivity extends AppCompatActivity {
         lvTweets.setAdapter(adapter);
         model.addObserver(adapter);
 
-        RequestHandler downloader;
-        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
-        downloader.execute();
+        updateHomeTimeline();
 
         btnSearch = (Button) findViewById(R.id.btn_search);
 
@@ -56,14 +54,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startSearch(String searchClause) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateHomeTimeline();
+    }
+
+    private void updateHomeTimeline() {
         RequestHandler downloader;
-        try {
-            String searchUrl = "https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(searchClause, "UTF-8");
-            downloader = new RequestHandler(model, searchUrl, RequestHandler.GET_REQUEST);
-            downloader.execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);
+        downloader.execute();
     }
 }
