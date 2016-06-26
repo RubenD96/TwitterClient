@@ -23,5 +23,22 @@
         android:layout_height="wrap_content"
         android:text="Search!"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignEnd="@+id/lv_tweets" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tweet!"
+        android:id="@+id/btn_tweet"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/btn_search" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_tweet"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/btn_tweet"
+        android:layout_alignBottom="@+id/btn_tweet" />
 </RelativeLayout>

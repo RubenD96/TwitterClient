@@ -164,6 +164,10 @@ public class TwitterModel extends Observable implements Observer {
         }
     }
 
+    public void postTweet(String tweet) {
+        System.out.println("postTweet: " + tweet);
+    }
+
     /**
      * Set the user
      */

@@ -6,15 +6,6 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.text.ParseException;
-
-import nl.saxion.robbins.twitterclient.activity.MainActivity;
-
 /**
  * Created by Ruben on 6/25/2016.
  */
@@ -38,16 +29,21 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         String responseStr = null;
+        OAuthRequest request = null;
         if (request_type == GET_REQUEST) {
-            OAuthRequest request = new OAuthRequest(Verb.GET, url, authManager.getService());
+            request = new OAuthRequest(Verb.GET, url, authManager.getService());
+        } else if (request_type == POST_REQUEST) {
+            request = new OAuthRequest(Verb.POST, url, authManager.getService());
+            request.addParameter("status", "testing");
+            System.out.println("IS IT ME YOU ARE LOOKING FOR?");
+        }
 
-            authManager.getService().signRequest(AuthManager.getInstance().getAccessToken(), request);
-            Response response = request.send();
+        authManager.getService().signRequest(AuthManager.getInstance().getAccessToken(), request);
+        Response response = request.send();
 
-            if(response.isSuccessful()) {
-                System.out.println(response.getBody());
-                responseStr = response.getBody();
-            }
+        if (response.isSuccessful()) {
+            System.out.println(response.getBody());
+            responseStr = response.getBody();
         }
         return responseStr;
     }
@@ -55,19 +51,22 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String strJson) {
         if (request_type == GET_REQUEST) {
-            if(url.startsWith("https://api.twitter.com/1.1/statuses/home_timeline.json")) {
+            if (url.startsWith("https://api.twitter.com/1.1/statuses/home_timeline.json")) {
                 model.setTimeline(strJson);
-            } else if(url.startsWith("https://api.twitter.com/1.1/search/tweets.json")) {
+            } else if (url.startsWith("https://api.twitter.com/1.1/search/tweets.json")) {
                 model.setTweetItems(strJson);
-            } else if(url.startsWith("https://api.twitter.com/1.1/statuses/user_timeline.json")) {
+            } else if (url.startsWith("https://api.twitter.com/1.1/statuses/user_timeline.json")) {
                 model.setTimeline(strJson);
-            } else if(url.startsWith("https://api.twitter.com/1.1/followers/ids.json")) {
+            } else if (url.startsWith("https://api.twitter.com/1.1/followers/ids.json")) {
                 model.setUserIDs(strJson);
-            } else if(url.startsWith("https://api.twitter.com/1.1/users/lookup.json")) {
+            } else if (url.startsWith("https://api.twitter.com/1.1/users/lookup.json")) {
                 model.setUsers(strJson);
             }
         } else if (request_type == POST_REQUEST) {
-
+            if (url.startsWith("https://api.twitter.com/1.1/statuses/update.json")) {
+                model.postTweet(strJson);
+                System.out.println("post_request: " + strJson);
+            }
         }
     }
 }
