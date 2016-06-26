@@ -34,16 +34,17 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
             request = new OAuthRequest(Verb.GET, url, authManager.getService());
         } else if (request_type == POST_REQUEST) {
             request = new OAuthRequest(Verb.POST, url, authManager.getService());
-            request.addParameter("status", "testing");
-            System.out.println("IS IT ME YOU ARE LOOKING FOR?");
         }
 
         authManager.getService().signRequest(AuthManager.getInstance().getAccessToken(), request);
         Response response = request.send();
+        System.out.println(response.getCode());
 
         if (response.isSuccessful()) {
             System.out.println(response.getBody());
             responseStr = response.getBody();
+        } else {
+            System.out.println("RESPONSE WAS NOT SUCCESSFUL");
         }
         return responseStr;
     }
@@ -65,7 +66,6 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
         } else if (request_type == POST_REQUEST) {
             if (url.startsWith("https://api.twitter.com/1.1/statuses/update.json")) {
                 model.postTweet(strJson);
-                System.out.println("post_request: " + strJson);
             }
         }
     }

@@ -52,9 +52,8 @@ public class MainActivity extends AppCompatActivity {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestHandler poster = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/update.json?status", RequestHandler.POST_REQUEST);
+                RequestHandler poster = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/update.json?status=test", RequestHandler.POST_REQUEST);
                 poster.execute();
-                System.out.println("posting?");
                 updateHomeTimeline();
             }
         });
