@@ -59,8 +59,12 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
                 model.setTimeline(strJson);
             } else if(url.startsWith("https://api.twitter.com/1.1/search/tweets.json")) {
                 model.setTweetItems(strJson);
-            } else if(url.startsWith("https://api.twitter.com/1.1/users/show.json")) {
-                // model.setUser(strJson);
+            } else if(url.startsWith("https://api.twitter.com/1.1/statuses/user_timeline.json")) {
+                model.setTimeline(strJson);
+            } else if(url.startsWith("https://api.twitter.com/1.1/followers/ids.json")) {
+                model.setUserIDs(strJson);
+            } else if(url.startsWith("https://api.twitter.com/1.1/users/lookup.json")) {
+                model.setUsers(strJson);
             }
         } else if (request_type == POST_REQUEST) {
 

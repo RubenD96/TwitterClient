@@ -24,6 +24,7 @@ public class TwitterModel extends Observable implements Observer {
 
     private ArrayList<Tweet> tweets;
     private ArrayList<User> users;
+    private ArrayList<Integer> userIDs;
     //private Profile profile;
     private User user;
     private HashSet<String> friendIds;
@@ -38,6 +39,7 @@ public class TwitterModel extends Observable implements Observer {
         // Initiate all lists / sets
         tweets = new ArrayList<>();
         users = new ArrayList<>();
+        userIDs = new ArrayList<>();
         followerNames = new ArrayList<>();
         friendNames = new ArrayList<>();
         friendIds = new HashSet<>();
@@ -60,6 +62,22 @@ public class TwitterModel extends Observable implements Observer {
     /** Get the list with tweets saved in this model */
     public ArrayList<Tweet> getTweets() {
         return tweets;
+    }
+
+    /**
+     * Get the list with users saved in this model
+     * @return the list of users
+     */
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    /**
+     * Get the list with userID's saved in this model
+     * @return list of userID's
+     */
+    public ArrayList<Integer> getUserIDs() {
+        return userIDs;
     }
 
     /** Get the list with follower names */
@@ -158,6 +176,78 @@ public class TwitterModel extends Observable implements Observer {
             e.printStackTrace();
         }
         */
+    }
+
+    /**
+     * Set the list with users to match the JSON result string
+     * @param result JSON string with users
+     */
+    public void setUsers(String result) {
+        System.out.println("Start setUsers " + result);
+
+        if (result != null && !result.isEmpty()) {
+            users.clear();
+            System.out.println("Users cleared");
+
+            JsonParser parser = new JsonParser(result);
+            System.out.println("New parser");
+
+            if (parser.getParentArray() != null) {
+                System.out.println("Entered if...");
+
+                for (int i = 0; i < parser.getParentArray().length(); i++) {
+                    System.out.println("Entered for...");
+                    try {
+                        users.add(new User(parser.getObject(i)));
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            refresh();
+        }
+    }
+
+    /**
+     * Set the list with userID's to match the JSON result string
+     * @param result JSON string with userID's
+     */
+    public void setUserIDs(String result) {
+        userIDs.clear();
+
+        JsonParser parser = new JsonParser(result);
+
+        if (result != null) {
+            JSONArray idArray = parser.getArray("ids");
+
+            for (int i = 0; i < idArray.length(); i++) {
+                try {
+                    userIDs.add(idArray.getInt(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        RequestHandler downloader;
+        String ids = null;
+        boolean startRequest = false;
+        System.out.println(userIDs.size());
+
+        while(!userIDs.isEmpty()) {
+            if(ids == null) {
+                ids = String.valueOf(userIDs.get(0));
+                userIDs.remove(0);
+            } else {
+                ids = ids + "," + String.valueOf(userIDs.get(0));
+                userIDs.remove(0);
+            }
+        }
+
+        downloader = new RequestHandler(this, "https://api.twitter.com/1.1/users/lookup.json?user_id=" + ids, RequestHandler.GET_REQUEST);
+        downloader.execute();
     }
 
     /** Set the list with user id's to match the JSON result String */

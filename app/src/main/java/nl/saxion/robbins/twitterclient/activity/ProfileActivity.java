@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import nl.saxion.robbins.twitterclient.R;
+import nl.saxion.robbins.twitterclient.model.ImageLoadTask;
 import nl.saxion.robbins.twitterclient.model.RequestHandler;
 import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.TwitterApplication;
@@ -29,15 +30,11 @@ public class ProfileActivity extends AppCompatActivity {
         TweetAdapter tweetAdapter = new TweetAdapter(this, model.getTweets(), model);
         ListView lvTweets = (ListView) findViewById(R.id.lv_tweets);
         lvTweets.setAdapter(tweetAdapter);
+        model.addObserver(tweetAdapter);
 
-
-
-        // Bundle extras = getIntent().getExtras();
-        // String screenName = extras.getString("screen_name");
-
-        /*RequestHandler downloader;
-        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/users/show.json?screen_name=" + screenName, RequestHandler.GET_REQUEST);
-        downloader.execute();*/
+        RequestHandler downloader;
+        downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=" + model.getUser().getScreenName() + "&count=10", RequestHandler.GET_REQUEST);
+        downloader.execute();
 
         ImageView ivProfileImage = (ImageView) findViewById(R.id.iv_profile_image);
 
@@ -45,28 +42,39 @@ public class ProfileActivity extends AppCompatActivity {
         tvName.setText(model.getUser().getName());
 
         TextView tvScreenName = (TextView) findViewById(R.id.tv_screen_name);
-        tvScreenName.setText(model.getUser().getScreenName());
+        tvScreenName.setText("@" + model.getUser().getScreenName());
 
         TextView tvFriendsCount = (TextView) findViewById(R.id.tv_friends_count);
         tvFriendsCount.setText(String.valueOf(model.getUser().getFriendsCount()));
 
-        tvFriendsCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), FriendsActivity.class);
-                startActivity(intent);
-            }
-        });
+        TextView tvFriends = (TextView) findViewById(R.id.tv_friends);
 
         TextView tvFollowersCount = (TextView) findViewById(R.id.tv_followers_count);
         tvFollowersCount.setText(String.valueOf(model.getUser().getFollowersCount()));
 
-        tvFollowersCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), FollowersActivity.class);
-                startActivity(intent);
-            }
-        });
+        TextView tvFollowers = (TextView) findViewById(R.id.tv_followers);
+
+        tvFriendsCount.setOnClickListener(new FriendsOnClickListener());
+        tvFriends.setOnClickListener(new FriendsOnClickListener());
+        tvFollowersCount.setOnClickListener(new FollowersOnClickListener());
+        tvFollowers.setOnClickListener(new FollowersOnClickListener());
+    }
+
+    private class FriendsOnClickListener implements View.OnClickListener
+    {
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(getBaseContext(), FriendsActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private class FollowersOnClickListener implements View.OnClickListener
+    {
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(getBaseContext(), FollowersActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -22,7 +22,7 @@
         </activity>
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.FollowersActivity" />
-        <activity android:name=".activity.FollowingActivity" />
+        <activity android:name=".activity.FriendsActivity" />
         <activity android:name=".activity.SearchActivity"></activity>
     </application>
 

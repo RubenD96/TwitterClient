@@ -9,21 +9,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.activity.ProfileActivity;
 
-public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
-
+public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observer {
     private ViewHolder holder;
-    private Tweet tweet;
-    private AuthManager authManager;
     private TwitterModel model;
+    private User user;
 
-    public TweetAdapter(Context context, ArrayList<Tweet> objects, TwitterModel model) {
+    public FriendFollowerAdapter(Context context, List<User> objects, TwitterModel model) {
         super(context, 0, objects);
         this.model = model;
     }
@@ -36,35 +34,35 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.tweet, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.friend_follower, parent, false);
 
             holder = new ViewHolder();
             holder.ivProfileImage = (ImageView) convertView.findViewById(R.id.iv_profile_image);
             holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             holder.tvScreenName = (TextView) convertView.findViewById(R.id.tv_screen_name);
-            holder.tvText = (TextView) convertView.findViewById(R.id.tv_text);
+            holder.tvDescription = (TextView) convertView.findViewById(R.id.tv_description);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        tweet = getItem(position);
+        user = getItem(position);
 
-        new ImageLoadTask(tweet.getUser().getProfileImageUrl(), holder.ivProfileImage).execute();
+        new ImageLoadTask(user.getProfileImageUrl(), holder.ivProfileImage).execute();
         holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.setUser(tweet.getUser());
+                model.setUser(user);
 
                 Intent intent = new Intent(getContext(), ProfileActivity.class);
                 getContext().startActivity(intent);
             }
         });
 
-        holder.tvName.setText(tweet.getUser().getName());
-        holder.tvScreenName.setText(tweet.getUser().getScreenName());
-        holder.tvText.setText(tweet.getText());
+        holder.tvName.setText(user.getName());
+        holder.tvScreenName.setText(user.getScreenName());
+        holder.tvDescription.setText(user.getDescription());
 
         return convertView;
     }
@@ -73,20 +71,6 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
         ImageView ivProfileImage;
         TextView tvName;
         TextView tvScreenName;
-        TextView tvText;
+        TextView tvDescription;
     }
-
-    /*public static Bitmap getBitmapFromUrl(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
 }
