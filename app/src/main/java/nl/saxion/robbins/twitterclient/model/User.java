@@ -18,6 +18,7 @@ public class User extends Observable {
     private String profileImageUrl;
     private int followersCount;
     private int friendCount;
+    private boolean friend;
     private Bitmap picture;
 
     /**
@@ -34,9 +35,14 @@ public class User extends Observable {
         //this.profileImageUrl = parser.getString("profile_image_url");
         this.followersCount = parser.getInt("followers_count");
         this.friendCount = parser.getInt("friends_count");
+        this.friend = parser.getBoolean("following");
         ImageLoadTask downloader = new ImageLoadTask(this);
         String imageURL = parser.getString("profile_image_url");
         downloader.execute(/*imageURL.substring(0, imageURL.length() - 11) + ".png")*/imageURL);
+    }
+
+    public boolean isFriend() {
+        return friend;
     }
 
     /**

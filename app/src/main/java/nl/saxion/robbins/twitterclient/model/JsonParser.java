@@ -96,6 +96,18 @@ public class JsonParser {
         return result;
     }
 
+    public boolean getBoolean(String name) {
+        boolean result = false;
+        try {
+            if (jsonObject.has(name)) {
+                result = jsonObject.getBoolean(name);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /** Get a int from the saved JSONObject with a given name */
     public int getInt(String name) {
         int result = 0;

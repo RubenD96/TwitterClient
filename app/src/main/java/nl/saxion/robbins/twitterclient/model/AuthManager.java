@@ -18,7 +18,6 @@ public class AuthManager {
     private OAuth10aService service;
     private OAuth1RequestToken requestToken;
     private OAuth1AccessToken accessToken;
-    private String mainUserScreenName;
 
     private AuthManager() {
         service = new ServiceBuilder()
@@ -61,11 +60,4 @@ public class AuthManager {
         this.accessToken = accessToken;
     }
 
-    public void setMainUserScreenName(String mainUserScreenName) {
-        this.mainUserScreenName = mainUserScreenName;
-    }
-
-    public String getMainUserScreenName() {
-        return mainUserScreenName;
-    }
 }
