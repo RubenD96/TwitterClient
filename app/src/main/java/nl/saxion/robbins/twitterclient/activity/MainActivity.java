@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         lvTweets.setAdapter(adapter);
         model.addObserver(adapter);
 
+        RequestHandler downloader = new RequestHandler(model, "https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.POST_REQUEST);
+        downloader.execute();
+
         updateHomeTimeline();
 
         btnSearch = (Button) findViewById(R.id.btn_search);

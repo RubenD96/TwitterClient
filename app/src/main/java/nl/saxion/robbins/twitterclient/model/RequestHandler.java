@@ -73,6 +73,9 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
         if (request_type == GET_REQUEST) {
             if (url.startsWith("https://api.twitter.com/1.1/statuses/home_timeline.json")) {
                 model.setTimeline(strJson);
+            } else if (url.startsWith("https://api.twitter.com/1.1/account/verify_credentials.json")) {
+                JsonParser parser = new JsonParser(strJson);
+                authManager.setMainUserScreenName(parser.getString("screen_name"));
             } else if (url.startsWith("https://api.twitter.com/1.1/search/tweets.json")) {
                 model.setTweetItems(strJson);
             } else if (url.startsWith("https://api.twitter.com/1.1/statuses/user_timeline.json")) {

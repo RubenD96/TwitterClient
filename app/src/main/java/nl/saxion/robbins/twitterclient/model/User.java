@@ -35,7 +35,8 @@ public class User extends Observable {
         this.followersCount = parser.getInt("followers_count");
         this.friendCount = parser.getInt("friends_count");
         ImageLoadTask downloader = new ImageLoadTask(this);
-        downloader.execute(parser.getString("profile_image_url"));
+        String imageURL = parser.getString("profile_image_url");
+        downloader.execute(/*imageURL.substring(0, imageURL.length() - 11) + ".png")*/imageURL);
     }
 
     /**
