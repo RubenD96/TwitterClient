@@ -6,6 +6,8 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 
+import nl.saxion.robbins.twitterclient.activity.MainActivity;
+
 /**
  * Created by Ruben on 6/25/2016.
  */
@@ -18,12 +20,21 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
     private TwitterModel model;
     private String url;
     private int request_type;
+    private String parameter;
 
     public RequestHandler(TwitterModel model, String url, int request_type) {
         authManager = AuthManager.getInstance();
         this.model = model;
         this.url = url;
         this.request_type = request_type;
+    }
+
+    public RequestHandler(TwitterModel model, String url, int request_type, String parameter) {
+        authManager = AuthManager.getInstance();
+        this.model = model;
+        this.url = url;
+        this.request_type = request_type;
+        this.parameter = parameter;
     }
 
     @Override
@@ -34,6 +45,14 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
             request = new OAuthRequest(Verb.GET, url, authManager.getService());
         } else if (request_type == POST_REQUEST) {
             request = new OAuthRequest(Verb.POST, url, authManager.getService());
+            if (url.startsWith("https://api.twitter.com/1.1/statuses/update.json")) {
+                if (parameter != null) {
+                    request.addParameter("status", parameter);
+                } else {
+                    System.out.println("Use a different constructor for RequestHandler or fill the 4th variable with a String");
+                }
+            }
+            System.out.println(request.toString());
         }
 
         authManager.getService().signRequest(AuthManager.getInstance().getAccessToken(), request);

@@ -52,9 +52,14 @@ public class MainActivity extends AppCompatActivity {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestHandler poster = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/update.json?status=test", RequestHandler.POST_REQUEST);
-                poster.execute();
-                updateHomeTimeline();
+                if (!etTweet.getText().toString().isEmpty()) {
+                    RequestHandler poster = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/update.json", RequestHandler.POST_REQUEST, etTweet.getText().toString());
+                    poster.execute();
+                    updateHomeTimeline();
+                    etTweet.getText().clear();
+                } else {
+                    System.out.println("type something, u retard!");
+                }
             }
         });
 
