@@ -16,6 +16,13 @@ import java.util.Observer;
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.activity.ProfileActivity;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         FriendFollowerAdapter shows a list of followers or friends of an user
+ *         implements Observer to keep data up to date
+ */
 public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observer {
 
     private ViewHolder holder;
@@ -27,6 +34,12 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
         this.model = model;
     }
 
+    /**
+     * Update method gets executed as soon as an Observer sees change or when NotifyAllAdapters
+     * gets called.
+     * @param observable
+     * @param data
+     */
     @Override
     public void update(Observable observable, Object data) {
         notifyDataSetChanged();
@@ -50,7 +63,6 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
 
         user = getItem(position);
 
-        //new ImageLoadTask(user).execute();
         holder.ivProfileImage.setImageBitmap(user.getPicture());
         holder.ivProfileImage.setOnClickListener(new FriendFollowerOnClickListener(position));
 
@@ -61,6 +73,9 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
         return convertView;
     }
 
+    /**
+     * Viewholder for this adapter
+     */
     static class ViewHolder {
         ImageView ivProfileImage;
         TextView tvName;
@@ -68,6 +83,9 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
         TextView tvDescription;
     }
 
+    /**
+     * If an user clicks on another picture while browsing friends or followers, go to their profile
+     */
     private class FriendFollowerOnClickListener implements View.OnClickListener {
         private int position;
 

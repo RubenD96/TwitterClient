@@ -6,6 +6,12 @@ import android.os.Bundle;
 
 import nl.saxion.robbins.twitterclient.R;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         StartActivity starts LoginActivity and then destroys itself.
+ */
 public class StartActivity extends AppCompatActivity {
 
     @Override

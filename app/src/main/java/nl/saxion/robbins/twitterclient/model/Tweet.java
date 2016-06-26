@@ -17,10 +17,15 @@ import nl.saxion.robbins.twitterclient.entities.Hashtag;
 import nl.saxion.robbins.twitterclient.entities.URL;
 import nl.saxion.robbins.twitterclient.entities.UserMention;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         Stores information about a Tweet
+ */
 public class Tweet {
-    private String id;
+
     private String userId;
-    // private Date createdAt;
     private String text;
     private SpannableString test;
     private ArrayList<Hashtag> hashtagObjects = new ArrayList<>();
@@ -28,19 +33,20 @@ public class Tweet {
     private ArrayList<UserMention> userMentionObjects = new ArrayList<>();
 
     public Tweet(JSONObject jsonObject) throws ParseException, JSONException, IOException {
-        this.id = jsonObject.getString("id_str");
 
-        String tempId = jsonObject.getJSONObject("user").getString("id_str");
+        JsonParser parser = new JsonParser(jsonObject);
+
+        String tempId = parser.getObject("user").getString("id_str");
 
         if(!Users.getInstance().isExistingUser(tempId)) {
-            Users.getInstance().addUser(jsonObject.getJSONObject("user"));
+            Users.getInstance().addUser(parser.getObject("user"));
             userId = tempId;
         } else {
             this.userId = Users.getInstance().getUser(tempId).getId();
         }
 
-        this.text = jsonObject.getString("text");
-        JSONObject entities = jsonObject.getJSONObject("entities");
+        this.text = parser.getString("text");
+        JSONObject entities = parser.getObject("entities");
 
         //hashtags
         JSONArray hashtags = entities.getJSONArray("hashtags");
@@ -73,7 +79,6 @@ public class Tweet {
             int start = url.getIndices()[0];
             int end = url.getIndices()[1] - 1;
 
-            //spanStr.setSpan(new ForegroundColorSpan(Color.BLUE), start, end, 0);
             spanStr.setSpan(new URLSpan(url.getUrl()), start, end, 0);
         }
 

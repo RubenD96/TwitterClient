@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.util.Observable;
 
 /**
+ * @author Ruben
+ * @author Robbin
  *
+ *         User class that stores information about a user
  */
 public class User extends Observable {
     private String id;
     private String name;
     private String screenName;
     private String description;
-    private String profileImageUrl;
     private int followersCount;
     private int friendCount;
     private boolean friend;
@@ -32,13 +34,12 @@ public class User extends Observable {
         this.name = parser.getString("name");
         this.screenName = parser.getString("screen_name");
         this.description = parser.getString("description");
-        //this.profileImageUrl = parser.getString("profile_image_url");
         this.followersCount = parser.getInt("followers_count");
         this.friendCount = parser.getInt("friends_count");
         this.friend = parser.getBoolean("following");
         ImageLoadTask downloader = new ImageLoadTask(this);
         String imageURL = parser.getString("profile_image_url");
-        downloader.execute(/*imageURL.substring(0, imageURL.length() - 11) + ".png")*/imageURL);
+        downloader.execute(imageURL);
     }
 
     public boolean isFriend() {
@@ -79,15 +80,6 @@ public class User extends Observable {
      */
     public String getDescription() {
         return description;
-    }
-
-    /**
-     * Get the User profile image url
-     *
-     * @return the url of the profile image of the User
-     */
-    public String getProfileImageUrl() {
-        return profileImageUrl;
     }
 
     public void setImage(Bitmap image) {

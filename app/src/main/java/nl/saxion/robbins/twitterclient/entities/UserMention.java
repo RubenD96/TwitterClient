@@ -5,7 +5,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by robbinschonewille on 25-05-16.
+ * @author Ruben
+ * @author Robbin
+ *
+ *         Information about the UserMention entitiy that a Tweet might contain
  */
 public class UserMention {
 

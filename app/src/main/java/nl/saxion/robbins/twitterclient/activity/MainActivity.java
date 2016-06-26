@@ -1,9 +1,11 @@
 package nl.saxion.robbins.twitterclient.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -14,6 +16,13 @@ import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.TwitterApplication;
 import nl.saxion.robbins.twitterclient.model.TwitterModel;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         MainActivty contains; Timeline, Search function and Tweet function
+ *         Uses an observer to keep the data up to date.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Button btnSearch;
@@ -33,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
         lvTweets.setAdapter(adapter);
         model.addObserver(adapter);
 
-        RequestHandler downloader = new RequestHandler(model, "https://api.twitter.com/1.1/account/verify_credentials.json", RequestHandler.POST_REQUEST);
-        downloader.execute();
-
+        //update home timeline
         updateHomeTimeline();
 
         btnSearch = (Button) findViewById(R.id.btn_search);
 
+        /**
+         * Goes to a new activity if Search! is clicked
+         */
         btnSearch.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -52,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
         etTweet = (EditText) findViewById(R.id.et_tweet);
         btnTweet = (Button) findViewById(R.id.btn_tweet);
 
+        /**
+         * Post a tweet!
+         */
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,20 +73,28 @@ public class MainActivity extends AppCompatActivity {
                     poster.execute();
                     updateHomeTimeline();
                     etTweet.getText().clear();
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 } else {
-                    System.out.println("type something, u retard!");
+                    System.out.println("No input, nothing to send!");
                 }
             }
         });
 
     }
 
+    /**
+     * If an user gets back to MainActivity after leaveing it, update the timeline
+     */
     @Override
     protected void onResume() {
         super.onResume();
         updateHomeTimeline();
     }
 
+    /**
+     * Updates the home timeline with a get request from twitter
+     */
     private void updateHomeTimeline() {
         RequestHandler downloader;
         downloader = new RequestHandler(model, "https://api.twitter.com/1.1/statuses/home_timeline.json", RequestHandler.GET_REQUEST);

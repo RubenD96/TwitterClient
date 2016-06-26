@@ -9,7 +9,10 @@ import com.github.scribejava.core.model.Verb;
 import nl.saxion.robbins.twitterclient.activity.MainActivity;
 
 /**
- * Created by Ruben on 6/25/2016.
+ * @author Ruben
+ * @author Robbin
+ *
+ *         RequestHandler handles all requests done by the user, GET and POST alike.
  */
 public class RequestHandler extends AsyncTask<Void, Void, String> {
 
@@ -29,6 +32,13 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
         this.request_type = request_type;
     }
 
+    /**
+     * Parameter constructor for posting a tweet
+     * @param model
+     * @param url
+     * @param request_type
+     * @param parameter tweet text
+     */
     public RequestHandler(TwitterModel model, String url, int request_type, String parameter) {
         authManager = AuthManager.getInstance();
         this.model = model;
@@ -83,10 +93,6 @@ public class RequestHandler extends AsyncTask<Void, Void, String> {
                 model.setUsers(strJson);
             } else if(url.startsWith("https://api.twitter.com/1.1/friends/list.json")) {
                 model.setUsers(strJson);
-            }
-        } else if (request_type == POST_REQUEST) {
-            if (url.startsWith("https://api.twitter.com/1.1/statuses/update.json")) {
-                model.postTweet(strJson);
             }
         }
     }

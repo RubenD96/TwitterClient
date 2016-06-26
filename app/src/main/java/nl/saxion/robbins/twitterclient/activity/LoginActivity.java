@@ -3,9 +3,8 @@ package nl.saxion.robbins.twitterclient.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -16,6 +15,12 @@ import com.github.scribejava.core.model.OAuth1RequestToken;
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.model.AuthManager;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         LoginActivity shows a Twitter WebView that asks the user to authorize the app.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private WebView wvLogin;
@@ -30,6 +35,10 @@ public class LoginActivity extends AppCompatActivity {
         RequestTokenTask requestTokenTask = new RequestTokenTask();
         requestTokenTask.execute();
 
+        /** If the url starts with callback url;
+         *  get and save AccessToken
+         *  return true so that you dont open callback url
+         */
         wvLogin.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -46,51 +55,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private class RequestTokenTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            requestToken = AuthManager.getInstance().getRequestToken();
-            String url = AuthManager.getInstance().getService().getAuthorizationUrl(requestToken) + "?oauth_token=" + requestToken.getToken();
-            return url;
-        }
-
-        @Override
-        protected void onPostExecute(String url) {
-            wvLogin.loadUrl(url);
-        }
-    }
-
-    private class AccessTokenTask extends AsyncTask<String, Void, String> {
-        String verifier;
-
-        public AccessTokenTask(String verifier) {
-            this.verifier = verifier;
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            OAuth1AccessToken accessToken = AuthManager.getInstance().getAccessToken(verifier);
-            String strAccessToken = accessToken.getToken();
-            AuthManager.getInstance().setAccessToken(accessToken);
-
-            return strAccessToken;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            startActivity(intent);
-
-            finish();
-        }
-    }
-
+    /**
+     * OAuth Class for AccessToken and RequestToken
+     */
     public static class TwitterAPI extends DefaultApi10a {
         private static TwitterAPI instance;
 
-        public static TwitterAPI getInstance(){
-            if(instance == null){
+        public static TwitterAPI getInstance() {
+            if (instance == null) {
                 instance = new TwitterAPI();
             }
             return instance;
@@ -109,6 +81,60 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
             return "https://api.twitter.com/oauth/authorize";
+        }
+    }
+
+    /**
+     * Inner class that extends from AsyncTask to get the RequestToken from the TwitterServer
+     */
+    private class RequestTokenTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            requestToken = AuthManager.getInstance().getRequestToken();
+            String url = AuthManager.getInstance().getService().getAuthorizationUrl(requestToken) + "?oauth_token=" + requestToken.getToken();
+            return url;
+        }
+
+        /**
+         * Load the Twitter url
+         * @param url
+         */
+        @Override
+        protected void onPostExecute(String url) {
+            wvLogin.loadUrl(url);
+        }
+    }
+
+    /**
+     * Inner class that extends from AsyncTask to get the AccessToken from the TwitterServer
+     */
+    private class AccessTokenTask extends AsyncTask<String, Void, String> {
+        String verifier;
+
+        public AccessTokenTask(String verifier) {
+            this.verifier = verifier;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            OAuth1AccessToken accessToken = AuthManager.getInstance().getAccessToken(verifier);
+            String strAccessToken = accessToken.getToken();
+            AuthManager.getInstance().setAccessToken(accessToken);
+
+            return strAccessToken;
+        }
+
+        /**
+         * After it is finished, start new activity and close this activity
+         * @param s
+         */
+        @Override
+        protected void onPostExecute(String s) {
+            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(intent);
+
+            finish();
         }
     }
 

@@ -14,73 +14,24 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Major twitter model that contains all other model objects.
+ * @author Ruben
+ * @author Robbin
  *
- * @author Niels Jan
+ *         Twitter model that contains all other model objects
  */
 public class TwitterModel extends Observable implements Observer {
-
-    /**********************************************************************************/
-    /*********************** ENCAPSULATED INSTANCE VARIABLES **************************/
-    /**********************************************************************************/
 
     private ArrayList<Tweet> tweets;
     private ArrayList<User> users;
     private ArrayList<String> userIDs;
-    //private Profile profile;
     private User user;
-    private HashSet<String> friendIds;
-    private ArrayList<String> friendNames;
     private ArrayList<String> followerNames;
 
-    /**********************************************************************************/
-    /********************************** CONSTRUCTOR ***********************************/
-    /**********************************************************************************/
-
     public TwitterModel() {
-        // Initiate all lists / sets
         tweets = new ArrayList<>();
         users = new ArrayList<>();
         userIDs = new ArrayList<>();
         followerNames = new ArrayList<>();
-        friendNames = new ArrayList<>();
-        friendIds = new HashSet<>();
-    }
-
-    /**********************************************************************************/
-    /************************************ GETTERS *************************************/
-    /**********************************************************************************/
-
-    /** Get the profile saved in this model */
-    /*public Profile getProfile() {
-        return profile;
-    }*/
-
-    /**
-     * Get the set with friend ids
-     */
-    public HashSet<String> getFriends() {
-        return friendIds;
-    }
-
-    /**
-     * Set the list with user id's to match the JSON result String
-     */
-    public void setFriends(String result) {
-        JsonParser parser = new JsonParser(result);
-        if (result != null) {
-            JSONArray idArray = parser.getArray("ids");
-            for (int i = 0; i < idArray.length(); i++) {
-                try {
-                    if (!friendIds.contains(idArray.get(i))) {
-                        friendIds.add(idArray.getString(i));
-                        Log.w("testing", "Added to friends id: " + idArray.getString(i));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     /**
@@ -140,15 +91,6 @@ public class TwitterModel extends Observable implements Observer {
     }
 
     /**
-     * Get the list with userID's saved in this model
-     *
-     * @return list of userID's
-     */
-    public ArrayList<String> getUserIDs() {
-        return userIDs;
-    }
-
-    /**
      * Set the list with userID's to match the JSON result string
      *
      * @param result JSON string with userID's
@@ -191,48 +133,6 @@ public class TwitterModel extends Observable implements Observer {
         downloader.execute();
     }
 
-    /**********************************************************************************/
-    /************************************ SETTERS *************************************/
-    /**********************************************************************************/
-
-    /**
-     * Get the list with follower names
-     */
-    public ArrayList<String> getfollowerNames() {
-        return followerNames;
-    }
-
-    /**
-     * Get the list with friend names
-     */
-    public ArrayList<String> getFriendNames() {
-        return friendNames;
-    }
-
-    /**
-     * Set the list of friend names with the given json String
-     */
-    public void setFriendNames(String result) {
-        friendNames.clear();
-        JsonParser parser = new JsonParser(result);
-        if (result != null) {
-            JSONArray userArray = parser.getArray("users");
-            for (int i = 0; i < userArray.length(); i++) {
-                try {
-                    JSONObject user = (JSONObject) userArray.get(i);
-                    if (!friendNames.contains(user.getString("screen_name"))) {
-                        friendNames.add(user.getString("screen_name"));
-                        Log.w("testing", "Added to friend names: " + user.getString("screen_name"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        setChanged();
-        notifyObservers();
-    }
-
     /**
      * Get the user
      *
@@ -247,20 +147,6 @@ public class TwitterModel extends Observable implements Observer {
      */
     public void setUser(User user) {
         this.user = user;
-    }
-
-    /**
-     * Add a friend to the friend ids list
-     */
-    public void addFriend(String friend) {
-        friendIds.add(friend);
-    }
-
-    /**
-     * remove a friend from the friend ids list
-     */
-    public void removeFriend(String friend) {
-        friendIds.remove(friend);
     }
 
     /**
@@ -310,50 +196,6 @@ public class TwitterModel extends Observable implements Observer {
 
             refresh();
         }
-    }
-
-    public void postTweet(String tweet) {
-
-    }
-
-    /**
-     * Set the list of follower names with the given json String
-     */
-    public void setFollowerNames(String result) {
-        followerNames.clear();
-        JsonParser parser = new JsonParser(result);
-        if (result != null) {
-            JSONArray userArray = parser.getArray("users");
-            for (int i = 0; i < userArray.length(); i++) {
-                try {
-                    JSONObject user = (JSONObject) userArray.get(i);
-                    if (!followerNames.contains(user.getString("screen_name"))) {
-                        followerNames.add(user.getString("screen_name"));
-                        Log.w("testing", "Added to follower names: " + user.getString("screen_name"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        setChanged();
-        notifyObservers();
-    }
-
-    /**********************************************************************************/
-    /**************************** MISCELLANEOUS METHODS *******************************/
-    /**********************************************************************************/
-
-    /**
-     * Checks if this model already contains a instance of the user with the given id_str
-     */
-    public User userExists(String id_str) {
-        for (User u : users) {
-            if (u.getId().equals(id_str)) {
-                return u;
-            }
-        }
-        return null;
     }
 
     /**

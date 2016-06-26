@@ -1,7 +1,7 @@
 package nl.saxion.robbins.twitterclient.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import nl.saxion.robbins.twitterclient.R;
@@ -10,6 +10,13 @@ import nl.saxion.robbins.twitterclient.model.RequestHandler;
 import nl.saxion.robbins.twitterclient.model.TwitterApplication;
 import nl.saxion.robbins.twitterclient.model.TwitterModel;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         FollowersActivity shows a list of users that the clicked user is being followed by.
+ *         Uses an observer to keep the data up to date.
+ */
 public class FollowersActivity extends AppCompatActivity {
 
     private TwitterModel model;

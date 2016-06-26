@@ -16,6 +16,12 @@ import java.util.Observer;
 import nl.saxion.robbins.twitterclient.R;
 import nl.saxion.robbins.twitterclient.activity.ProfileActivity;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         TweetAdapter for a listview
+ */
 public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
 
     private ViewHolder holder;
@@ -27,6 +33,12 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
         this.model = model;
     }
 
+    /**
+     * Update method gets executed as soon as an Observer sees change or when NotifyAllAdapters
+     * gets called.
+     * @param observable
+     * @param data
+     */
     @Override
     public void update(Observable observable, Object data) {
         notifyDataSetChanged();
@@ -50,7 +62,6 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
 
         tweet = getItem(position);
 
-        //new ImageLoadTask(tweet.getUser()).execute();
         holder.ivProfileImage.setImageBitmap(tweet.getUser().getPicture());
         holder.ivProfileImage.setOnClickListener(new TweetOnClickListener(position));
 
@@ -61,6 +72,9 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
         return convertView;
     }
 
+    /**
+     * Viewholder for this adapter
+     */
     static class ViewHolder {
         ImageView ivProfileImage;
         TextView tvName;
@@ -85,18 +99,4 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
             getContext().startActivity(intent);
         }
     }
-
-    /*public static Bitmap getBitmapFromUrl(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
 }

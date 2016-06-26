@@ -15,6 +15,13 @@ import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.TwitterApplication;
 import nl.saxion.robbins.twitterclient.model.TwitterModel;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         ProfileActivity shows the user a profile of an user.
+ *         Uses an observer to keep the data up to date.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private TwitterModel model;
@@ -68,18 +75,27 @@ public class ProfileActivity extends AppCompatActivity {
         btnFriend.setOnClickListener(new followOnClickListener());
     }
 
+    /**
+     * Post request to follow the user of the profile
+     */
     private void follow() {
         RequestHandler follow = new RequestHandler(model, "https://api.twitter.com/1.1/friendships/create.json?user_id=" + model.getUser().getId() + "&follow=true", RequestHandler.POST_REQUEST, model.getUser().getId());
         follow.execute();
         btnFriend.setText("Unfollow :(");
     }
 
+    /**
+     * Post request to unfollow the user of the profile
+     */
     private void unfollow() {
         RequestHandler unfollow = new RequestHandler(model, "https://api.twitter.com/1.1/friendships/destroy.json?user_id=" + model.getUser().getId(), RequestHandler.POST_REQUEST, model.getUser().getId());
         unfollow.execute();
         btnFriend.setText("Follow :)");
     }
 
+    /**
+     * Inner class that activates when follow or unfollow button is clicked
+     */
     private class followOnClickListener implements View.OnClickListener {
 
         @Override
@@ -93,6 +109,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inner class that activates when following is clicked
+     * Starts a new activity
+     */
     private class FriendsOnClickListener implements View.OnClickListener {
         public void onClick(View v) {
             Intent intent = new Intent(getBaseContext(), FriendsActivity.class);
@@ -100,6 +120,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inner class that activates when followers is clicked
+     * Starts a new activity
+     */
     private class FollowersOnClickListener implements View.OnClickListener {
         public void onClick(View v) {
             Intent intent = new Intent(getBaseContext(), FollowersActivity.class);

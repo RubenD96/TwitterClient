@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.io.UnsupportedEncodingException;
@@ -18,9 +19,15 @@ import nl.saxion.robbins.twitterclient.model.TweetAdapter;
 import nl.saxion.robbins.twitterclient.model.TwitterApplication;
 import nl.saxion.robbins.twitterclient.model.TwitterModel;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         SearchActivity is used for searching specific tweets
+ */
 public class SearchActivity extends AppCompatActivity {
 
-    private AutoCompleteTextView actvSearch;
+    private EditText etSearch;
     private ListView lvSearch;
     private Button btnSearch;
     private TwitterModel model;
@@ -30,7 +37,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        actvSearch = (AutoCompleteTextView) findViewById(R.id.actv_search);
+        etSearch = (EditText) findViewById(R.id.et_search);
         btnSearch = (Button) findViewById(R.id.btn_search);
 
         model = ((TwitterApplication) getApplication()).getModel();
@@ -45,12 +52,16 @@ public class SearchActivity extends AppCompatActivity {
             hashtagSearch(searchURL);
         }
 
+        /**
+         * Start the search
+         */
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (actvSearch.getText() != null && actvSearch.length() > 2) {
-                    startSearch(actvSearch.getText().toString());
+                if (etSearch.getText() != null && etSearch.length() > 2) {
+                    startSearch(etSearch.getText().toString());
 
+                    // Hide keyboard when button is pressed
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
@@ -64,7 +75,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * On back pressed (go back to home screen), clear the tweets
+     * On back pressed (go back to MainActivity), clear the tweets
      */
     @Override
     public void onBackPressed() {

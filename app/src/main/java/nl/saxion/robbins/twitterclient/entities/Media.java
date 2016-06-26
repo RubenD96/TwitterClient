@@ -1,4 +1,4 @@
-package nl.saxion.robbins.twitterclient.entities.media;
+package nl.saxion.robbins.twitterclient.entities;
 
 import java.util.Observable;
 
@@ -10,9 +10,13 @@ import android.graphics.Bitmap;
 import nl.saxion.robbins.twitterclient.model.ImageLoadTask;
 import nl.saxion.robbins.twitterclient.model.JsonParser;
 
-/** A media object which is part of a tweet. Contains a picture, video or something else
+/**
+ * @author Ruben
+ * @author Robbin
  *
- * @author Niels Jan */
+ *         Contains information about a Media that a Tweet might contain
+ *         Unused.
+ */
 public class Media extends Observable {
 
     private String url;

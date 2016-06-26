@@ -8,39 +8,36 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.AsyncTask;
 
-import nl.saxion.robbins.twitterclient.entities.media.Media;
+import nl.saxion.robbins.twitterclient.entities.Media;
 
-/** Download bitmaps in the background thread based on a given URL. returns bitmap
+ /**
+ * @author Ruben
+ * @author Robbin
  *
- * @author Niels Jan */
+ *         Download bitmaps in the background thread based on a given URL. returns bitmap
+ */
 public class ImageLoadTask extends AsyncTask<String, Void, Bitmap> {
-
-    /**********************************************************************************/
-    /*********************** ENCAPSULATED INSTANCE VARIABLES **************************/
-    /**********************************************************************************/
 
     private User user;
     private Media media;
 
-    /**********************************************************************************/
-    /********************************* CONSTRUCTORS ***********************************/
-    /**********************************************************************************/
-
-    /** Construct this bmp downloader from with a user */
+    /**
+     * Construct this bmp downloader with a user
+     */
     public ImageLoadTask(User user) {
         this.user = user;
     }
 
-    /** Construct this bmp downloader from with a media object */
+    /**
+     * Construct this bmp downloader with a media object
+     */
     public ImageLoadTask(Media media) {
         this.media = media;
     }
 
-    /**********************************************************************************/
-    /*********************************** METHODS **************************************/
-    /**********************************************************************************/
-
-    /** Perform the downloading in the background thread */
+    /**
+     * Perform the downloading in the background thread
+     */
     protected Bitmap doInBackground(String... urls) {
         String imageURL = urls[0];
         Bitmap image = null;
@@ -55,7 +52,9 @@ public class ImageLoadTask extends AsyncTask<String, Void, Bitmap> {
         return addBorder(image, 1);
     }
 
-    /** Helper method, adds a black border to a image and returns the image */
+    /**
+     * Helper method, adds a black border to a image and returns the image
+     */
     private Bitmap addBorder(Bitmap bmp, int borderSize) {
         Bitmap bmpWithBorder = null;
         if (bmp != null && bmp.getConfig() != null) {
@@ -67,7 +66,9 @@ public class ImageLoadTask extends AsyncTask<String, Void, Bitmap> {
         return bmpWithBorder;
     }
 
-    /** set the result after the download depending on how this downloader was constructed */
+    /**
+     * set the result after the download depending on how this downloader was constructed
+     */
     protected void onPostExecute(Bitmap result) {
         if (user != null) {
             user.setImage(result);

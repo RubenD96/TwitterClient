@@ -6,6 +6,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+/**
+ * @author Ruben
+ * @author Robbin
+ *
+ *         Class for storing users
+ */
 public class Users {
     private static Users instance;
     private ArrayList<User> users;

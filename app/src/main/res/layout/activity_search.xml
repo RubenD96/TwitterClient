@@ -9,11 +9,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="nl.saxion.robbins.twitterclient.activity.SearchActivity">
 
-    <AutoCompleteTextView
-        android:id="@+id/actv_search"
+    <EditText
+        android:id="@+id/et_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:maxLength="140"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/btn_search" />
 
@@ -22,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/actv_search" />
+        android:layout_below="@+id/et_search" />
 
     <Button
         android:layout_width="wrap_content"

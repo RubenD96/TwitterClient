@@ -1,16 +1,17 @@
 package nl.saxion.robbins.twitterclient.model;
 
-import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.oauth.OAuth10aService;
 
 import nl.saxion.robbins.twitterclient.activity.LoginActivity;
 
 /**
- * Created by Ruben on 6/17/2016.
+ * @author Ruben
+ * @author Robbin
+ *
+ *         AuthManager handles the login of the user on this application
  */
 public class AuthManager {
 
@@ -34,22 +35,25 @@ public class AuthManager {
         return instance;
     }
 
+    /**
+     * Gets the current service
+     * @return service
+     */
     public OAuth10aService getService() {
         return service;
     }
 
-    public OAuth1RequestToken getRequestToken()
-    {
+    /**
+     * Gets the current request token
+     * @return the current request token
+     */
+    public OAuth1RequestToken getRequestToken() {
         requestToken = service.getRequestToken();
         return requestToken;
     }
 
-    public void setRequestToken(OAuth1RequestToken requestToken) {
-        this.requestToken = requestToken;
-    }
-
     public OAuth1AccessToken getAccessToken(String verifier) {
-        return service.getAccessToken(this.requestToken,verifier);
+        return service.getAccessToken(this.requestToken, verifier);
     }
 
     public OAuth1AccessToken getAccessToken() {
