@@ -37,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         downloader.execute();
 
         ImageView ivProfileImage = (ImageView) findViewById(R.id.iv_profile_image);
+        ivProfileImage.setImageBitmap(model.getUser().getPicture());
 
         TextView tvName = (TextView) findViewById(R.id.tv_name);
         tvName.setText(model.getUser().getName());

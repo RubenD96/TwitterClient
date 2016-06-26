@@ -26,7 +26,7 @@ public class TwitterModel extends Observable implements Observer {
 
     private ArrayList<Tweet> tweets;
     private ArrayList<User> users;
-    private ArrayList<Integer> userIDs;
+    private ArrayList<String> userIDs;
     //private Profile profile;
     private User user;
     private HashSet<String> friendIds;
@@ -111,17 +111,21 @@ public class TwitterModel extends Observable implements Observer {
             users.clear();
 
             JsonParser parser = new JsonParser(result);
-            JSONArray userArray = parser.getArray("users");
+            JSONArray userArray = null;
+
+            try {
+                userArray = parser.getArray("users");
+            } catch (NullPointerException npe) {
+                npe.getMessage();
+            }
 
             if (userArray == null) {
-                System.out.println("User array null");
                 if (parser.getParentArray() != null) {
                     for (int i = 0; i < parser.getParentArray().length(); i++) {
                         users.add(new User(parser.getObject(i)));
                     }
                 }
             } else {
-                System.out.println("User array not null");
                 for (int i = 0; i < userArray.length(); i++) {
                     try {
                         users.add(new User(userArray.getJSONObject(i)));
@@ -140,7 +144,7 @@ public class TwitterModel extends Observable implements Observer {
      *
      * @return list of userID's
      */
-    public ArrayList<Integer> getUserIDs() {
+    public ArrayList<String> getUserIDs() {
         return userIDs;
     }
 
@@ -157,9 +161,10 @@ public class TwitterModel extends Observable implements Observer {
         if (result != null) {
             JSONArray idArray = parser.getArray("ids");
 
-            for (int i = 0; i < idArray.length(); i++) {
+            for (int i = 0; i < idArray.length() && i < 100; i++) {
                 try {
-                    userIDs.add(idArray.getInt(i));
+                    userIDs.add(idArray.getString(i));
+                    System.out.println(userIDs.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -169,18 +174,19 @@ public class TwitterModel extends Observable implements Observer {
         RequestHandler downloader;
         String ids = null;
         System.out.println(userIDs.size());
-        int size = userIDs.size();
 
         while (!userIDs.isEmpty()) {
             if (ids == null) {
                 ids = String.valueOf(userIDs.get(0));
                 userIDs.remove(0);
+                System.out.println(userIDs.size());
             } else {
                 ids = ids + "," + String.valueOf(userIDs.get(0));
                 userIDs.remove(0);
+                System.out.println(userIDs.size());
             }
         }
-
+        System.out.println(ids);
         downloader = new RequestHandler(this, "https://api.twitter.com/1.1/users/lookup.json?user_id=" + ids, RequestHandler.GET_REQUEST);
         downloader.execute();
     }
