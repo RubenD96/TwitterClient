@@ -1,14 +1,16 @@
 package nl.saxion.robbins.twitterclient.model;
 
-import org.json.JSONException;
+import android.graphics.Bitmap;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Observable;
 
 /**
  *
  */
-public class User {
+public class User extends Observable {
     private String id;
     private String name;
     private String screenName;
@@ -16,27 +18,29 @@ public class User {
     private String profileImageUrl;
     private int followersCount;
     private int friendCount;
+    private Bitmap picture;
 
     /**
      * Constructor for the User class. Creates a new User based on a JSON object
+     *
      * @param jsonObject JSON object from which the user is created
      */
-    public User(JSONObject jsonObject) throws IOException {
-        try {
-            this.id = jsonObject.getString("id_str");
-            this.name = jsonObject.getString("name");
-            this.screenName = jsonObject.getString("screen_name");
-            this.description = jsonObject.getString("description");
-            this.profileImageUrl = jsonObject.getString("profile_image_url");
-            this.followersCount = jsonObject.getInt("followers_count");
-            this.friendCount = jsonObject.getInt("friends_count");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public User(JSONObject jsonObject) {
+        JsonParser parser = new JsonParser(jsonObject);
+        this.id = parser.getString("id_str");
+        this.name = parser.getString("name");
+        this.screenName = parser.getString("screen_name");
+        this.description = parser.getString("description");
+        //this.profileImageUrl = parser.getString("profile_image_url");
+        this.followersCount = parser.getInt("followers_count");
+        this.friendCount = parser.getInt("friends_count");
+        ImageLoadTask downloader = new ImageLoadTask(this);
+        downloader.execute(parser.getString("profile_image_url"));
     }
 
     /**
      * Get the User id
+     *
      * @return the id of a User
      */
     public String getId() {
@@ -45,6 +49,7 @@ public class User {
 
     /**
      * Get the User name
+     *
      * @return the name of a User
      */
     public String getName() {
@@ -53,6 +58,7 @@ public class User {
 
     /**
      * Get the User screen name
+     *
      * @return the screen name of a User
      */
     public String getScreenName() {
@@ -61,6 +67,7 @@ public class User {
 
     /**
      * Get the User description
+     *
      * @return the description of a User
      */
     public String getDescription() {
@@ -69,14 +76,26 @@ public class User {
 
     /**
      * Get the User profile image url
+     *
      * @return the url of the profile image of the User
      */
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
 
+    public void setImage(Bitmap image) {
+        this.picture = image;
+        setChanged();
+        notifyObservers();
+    }
+
+    public Bitmap getPicture() {
+        return picture;
+    }
+
     /**
      * Get the User followers
+     *
      * @return number of followers
      */
     public int getFollowersCount() {
@@ -85,6 +104,7 @@ public class User {
 
     /**
      * Get the User friends
+     *
      * @return number of friends
      */
     public int getFriendsCount() {

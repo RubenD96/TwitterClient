@@ -50,7 +50,8 @@ public class FriendFollowerAdapter extends ArrayAdapter<User> implements Observe
 
         user = getItem(position);
 
-        new ImageLoadTask(user.getProfileImageUrl(), holder.ivProfileImage).execute();
+        //new ImageLoadTask(user).execute();
+        holder.ivProfileImage.setImageBitmap(user.getPicture());
         holder.ivProfileImage.setOnClickListener(new FriendFollowerOnClickListener(position));
 
         holder.tvName.setText(user.getName());

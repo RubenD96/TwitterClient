@@ -50,7 +50,8 @@ public class TweetAdapter extends ArrayAdapter<Tweet> implements Observer {
 
         tweet = getItem(position);
 
-        new ImageLoadTask(tweet.getUser().getProfileImageUrl(), holder.ivProfileImage).execute();
+        //new ImageLoadTask(tweet.getUser()).execute();
+        holder.ivProfileImage.setImageBitmap(tweet.getUser().getPicture());
         holder.ivProfileImage.setOnClickListener(new TweetOnClickListener(position));
 
         holder.tvName.setText(tweet.getUser().getName());
